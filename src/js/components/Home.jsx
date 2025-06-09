@@ -1,28 +1,67 @@
-import React from "react";
+import React, { useState } from 'react';
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+function Home() {
+  const [tareas, setTareas] = useState([]);
+  const [nuevaTarea, setNuevaTarea] = useState('');
 
-//create your first component
-const Home = () => {
-	return (
-		<div className="text-center">
-            
+  const manejarCambio = (e) => {
+    setNuevaTarea(e.target.value);
+  };
 
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
-	);
-};
+  const agregarTarea = () => {
+    if (nuevaTarea.trim() === '') return;
+    setTareas([...tareas, nuevaTarea]);
+    setNuevaTarea('');
+  };
+
+  const eliminarTarea = (indice) => {
+    const nuevasTareas = tareas.filter((_, i) => i !== indice);
+    setTareas(nuevasTareas);
+  };
+
+  return (
+    <div className="container mt-3">
+      <div className="card shadow">
+        <div className="card-body">
+          <h2 className="text-center mb-4">📝 Lista de Tareas</h2>
+
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Escribe una tarea..."
+              value={nuevaTarea}
+              onChange={manejarCambio}
+            />
+            <button className="btn btn-primary" onClick={agregarTarea}>
+              Agregar
+            </button>
+          </div>
+
+          {tareas.length === 0 ? (
+            <p className="text-muted text-center">No hay tareas todavía.</p>
+          ) : (
+            <ul className="list-group">
+              {tareas.map((tarea, index) => (
+                <li
+                  key={index}
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  {tarea}
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => eliminarTarea(index)}
+                  >
+                    ❌
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default Home;
